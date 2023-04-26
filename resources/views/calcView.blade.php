@@ -9,16 +9,16 @@
 <body>
     <form action="/calculer" method="POST">
         @csrf
-        <input type="text" name="number1" placeholder={{$number1 ?? "number 1"}}>
+        <input type="text" name="number1" placeholder={{request() -> number1 ?? "number 1"}}>
         <select name="opr">
-            <option value="-" {{"-" == ($opr ?? "+") ? "selected" : ""}}>-</option>
-            <option value="+" {{"+" == ($opr ?? "+") ? "selected" : ""}}>+</option>
-            <option value="/" {{"/" == ($opr ?? "+") ? "selected" : ""}}>/</option>
-            <option value="*" {{"*" == ($opr ?? "+") ? "selected" : ""}}>*</option>
+            <option value="-" {{"-" == (request() -> opr ?? "+") ? "selected" : ""}}>-</option>
+            <option value="+" {{"+" == (request() -> opr ?? "+") ? "selected" : ""}}>+</option>
+            <option value="/" {{"/" == (request() -> opr ?? "+") ? "selected" : ""}}>/</option>
+            <option value="*" {{"*" == (request() -> opr ?? "+") ? "selected" : ""}}>*</option>
         </select>
-        <input type="text" name="number2" placeholder={{$number2 ?? "number 2"}}>
+        <input type="text" name="number2" placeholder={{request() -> number2 ?? "number 2"}}>
         <input type="submit" value="ok">
     </form>
-    le résultat : {{$res ?? 0}}
+    le résultat : {{request() -> res ?? 0}}
 </body>
 </html>

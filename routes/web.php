@@ -1,17 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\CalcController;
+use App\Http\Controllers\StudentLoginController;
+use App\Http\Controllers\SingleActionController;
+use App\Http\Controllers\MarkController;
 
 Route::get('/', function () {
     return "this is /";
@@ -25,11 +18,17 @@ Route::get('/page/{id}', function ($id) {
 Route::get('contact', function() {
     return "C'est moi le contact.";
 });
+// commenter la route /{n} pour qu'elle n'affecte pas les autre routes
+// Route::get('{n}', function($n) {
+//     return 'Je suis la page ' . $n . ' !';
+// });
 
+
+// sans Route::view
 // Route::get('/test/{param}', function($param) {
 //     return view('welcome', ["param" => $param]);
 // });
-
+// avec Route::view
 Route::view("/test/{param} " , "welcome");
 
 Route::view(
@@ -41,7 +40,7 @@ Route::view(
 
 Route::view("/profile", "profile");
 Route::post("/profile", function (){
-    return view("show_profile", [
+    return view("showProfile", [
         "nom" => request() -> nom,
         "email" => request() -> email,
     ]);
@@ -49,35 +48,19 @@ Route::post("/profile", function (){
 
 
 
-Route::view("/home", "calcView");
+Route::get("/home", [CalcController::class, "index"]) -> name("calcHome");
+Route::post("/calculer", [CalcController::class, "calc"]);
 
-Route::post("/calculer", function(){
-    $req = request();
-    $number1 = $req -> number1;
-    $number2 = $req -> number2;
-    $opr = $req -> opr;
-    $res = 0;
-    switch ($opr) {
-        case '*':
-            $res = $number1 * $number2;
-            break;
-        case '/':
-            $res = $number1 / $number2;
-            break;
-        case '+':
-            $res = $number1 + $number2;
-            break;
-        case '-':
-            $res = $number1 - $number2;
-            break;
-        
-        default:
-            return abort(400, "bad request");
-            break;
-    }
 
-    return view("calcView", compact(["res", "number1", "number2", "opr"]));
-});
-Route::get('{n}', function($n) {
-    return 'Je suis la page ' . $n . ' !';
-});
+// TP3 - exercice 2
+Route::get("/student-login", [StudentLoginController::class, "index"]);
+Route::post("/student-login", [StudentLoginController::class, "afficher"]) -> name("studentLogin");
+
+// TP3 - exercice 3
+Route::get("/invoke-view/{view?}", SingleActionController::class);
+
+// TP 4
+
+Route::get("mark", [MarkController::class, "index"]) -> name("markAll");
+Route::get("mark/stats", [MarkController::class, "stats"]) -> name("markStats");
+Route::get("mark/show", [MarkController::class, "show"]) -> name("searchMarks");
